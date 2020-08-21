@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Editor } from './Editor';
 import { Repl } from './Repl';
 import { InterpContext } from '../contexts/InterpContext';

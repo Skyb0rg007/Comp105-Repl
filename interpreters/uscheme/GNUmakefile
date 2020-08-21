@@ -35,8 +35,7 @@ _build/amalg.js: _build/index.html
 	sed -n 's/.*src="\(.*\)".*/\1/p' $< | xargs cat >$@
 
 _build/optimized.js: _build/amalg.js
-	# $(CLOSURE_COMPILER) --jscomp_off='*' --js=$< --js_output_file=$@
-	cp $< $@
+	$(CLOSURE_COMPILER) --jscomp_off='*' --js=$< --js_output_file=$@
 
 $(OUTPUT_JS): _build/optimized.js uscheme.js.in
 	sed >$@ \

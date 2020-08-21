@@ -5261,7 +5261,6 @@ export class Impcore {
     #module;
     #oldFilemap;
     constructor() {
-        console.log('Constructing Impcore interpreter');
         this.#module = createModule();
         this.#oldFilemap = new Map();
     }
