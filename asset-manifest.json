@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.js": "/uscheme-js/static/js/main.412419f9.chunk.js",
-    "main.js.map": "/uscheme-js/static/js/main.412419f9.chunk.js.map",
-    "runtime-main.js": "/uscheme-js/static/js/runtime-main.43f4dfd2.js",
-    "runtime-main.js.map": "/uscheme-js/static/js/runtime-main.43f4dfd2.js.map",
-    "static/css/2.dbb1bf68.chunk.css": "/uscheme-js/static/css/2.dbb1bf68.chunk.css",
-    "static/js/2.fc1c3a73.chunk.js": "/uscheme-js/static/js/2.fc1c3a73.chunk.js",
-    "static/js/2.fc1c3a73.chunk.js.map": "/uscheme-js/static/js/2.fc1c3a73.chunk.js.map",
-    "index.html": "/uscheme-js/index.html",
-    "precache-manifest.b3c1fe450cf46c4edb01a6245d7807c3.js": "/uscheme-js/precache-manifest.b3c1fe450cf46c4edb01a6245d7807c3.js",
-    "service-worker.js": "/uscheme-js/service-worker.js",
-    "static/css/2.dbb1bf68.chunk.css.map": "/uscheme-js/static/css/2.dbb1bf68.chunk.css.map",
-    "static/js/2.fc1c3a73.chunk.js.LICENSE.txt": "/uscheme-js/static/js/2.fc1c3a73.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/uscheme-js/static/media/logo.5d5d9eef.svg"
+    "main.js": "/Comp105-Repl/static/js/main.3b9bbe58.chunk.js",
+    "main.js.map": "/Comp105-Repl/static/js/main.3b9bbe58.chunk.js.map",
+    "runtime-main.js": "/Comp105-Repl/static/js/runtime-main.da2395ea.js",
+    "runtime-main.js.map": "/Comp105-Repl/static/js/runtime-main.da2395ea.js.map",
+    "static/css/2.dbb1bf68.chunk.css": "/Comp105-Repl/static/css/2.dbb1bf68.chunk.css",
+    "static/js/2.fc1c3a73.chunk.js": "/Comp105-Repl/static/js/2.fc1c3a73.chunk.js",
+    "static/js/2.fc1c3a73.chunk.js.map": "/Comp105-Repl/static/js/2.fc1c3a73.chunk.js.map",
+    "index.html": "/Comp105-Repl/index.html",
+    "precache-manifest.269d5859d6bb2176685438d5e3ec899e.js": "/Comp105-Repl/precache-manifest.269d5859d6bb2176685438d5e3ec899e.js",
+    "service-worker.js": "/Comp105-Repl/service-worker.js",
+    "static/css/2.dbb1bf68.chunk.css.map": "/Comp105-Repl/static/css/2.dbb1bf68.chunk.css.map",
+    "static/js/2.fc1c3a73.chunk.js.LICENSE.txt": "/Comp105-Repl/static/js/2.fc1c3a73.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/Comp105-Repl/static/media/logo.5d5d9eef.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.43f4dfd2.js",
+    "static/js/runtime-main.da2395ea.js",
     "static/css/2.dbb1bf68.chunk.css",
     "static/js/2.fc1c3a73.chunk.js",
-    "static/js/main.412419f9.chunk.js"
+    "static/js/main.3b9bbe58.chunk.js"
   ]
 }
