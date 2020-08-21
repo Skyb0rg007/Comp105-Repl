@@ -1,0 +1,78 @@
+
+// TODO: code splitting via dynamic import
+const makeModule = Module => {
+    /* eslint-disable */
+    // {{SCRIPT}}
+    /* eslint-enable */
+};
+
+const createModule = async () => {
+    let output = '';
+    return await new Promise(resolve => {
+        const Module = {
+            output: () => output,
+            clearOutput: () => output = '',
+            print: str => output += str,
+            printErr: str => output += str,
+            onRuntimeInitialized: () => resolve(Module),
+            locateFile: (path, scriptDirectory) => {
+                switch (path)
+                {
+                    case 'impcore.wasm':
+                        return process.env.PUBLIC_URL + '/impcore.wasm';
+                    default:
+                        console.log('Emscripten is locating file "' + path + '", which is unexpected');
+                        return scriptDirectory + path;
+                }
+            }
+        };
+        makeModule(Module);
+        Module.FS.mkdir('app');
+        Module.FS.chdir('app');
+        const impcore_eval = Module.cwrap('impcore_eval', 'void', ['string']);
+        Module.eval = str => {
+            impcore_eval(str);
+            const output = Module.output();
+            Module.clearOutput();
+            return output;
+        };
+    });
+};
+
+export class Impcore {
+    name = 'impcore';
+    mode = 'scheme';
+    autoCloseBrackets = '()[]{}';
+    extension = '.imp';
+    #module;
+    #oldFilemap;
+    constructor() {
+        console.log('Constructing Impcore interpreter');
+        this.#module = createModule();
+        this.#oldFilemap = new Map();
+    }
+    async setFilemap(filemap) {
+        const M = await this.#module;
+        // Small optimization
+        if (filemap === this.#oldFilemap)
+            return;
+        filemap.forEach((v, k) => {
+            M.FS.writeFile(k, v);
+        });
+        this.#oldFilemap.forEach((_, k) => {
+            if (!filemap.has(k))
+                M.FS.unlink(k);
+        })
+        this.#oldFilemap = filemap;
+    }
+    async eval(str) {
+        return (await this.#module).eval(str + '\n');
+    }
+    async reset() {
+        this.#module = createModule();
+        return null;
+    }
+    async module() {
+        return await this.#module;
+    }
+};

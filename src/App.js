@@ -1,26 +1,31 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Content } from './components/Content';
+import { Navbar } from './components/Navbar';
+import { InterpContext } from './contexts/InterpContext';
+import { Impcore } from './interpreters/impcore';
+import { UScheme } from './interpreters/uscheme';
+
+let interpreters = new Map([
+    ['impcore', new Impcore()],
+    ['uscheme', new UScheme()]
+]);
+
+export const App = () => {
+    const [currentLang, setCurrentLang] = React.useState('impcore');
+    const onLangSelect = lang => {
+        setCurrentLang(lang);
+    };
+    return (
+        <React.Fragment>
+            <Navbar
+              currentLang={currentLang}
+              languages={Array.from(interpreters.keys())}
+              onLangSelect={onLangSelect} />
+            <InterpContext.Provider value={interpreters.get(currentLang)}>
+                <Content />
+            </InterpContext.Provider>
+        </React.Fragment>
+    );
 }
-
-export default App;

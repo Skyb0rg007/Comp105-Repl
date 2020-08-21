@@ -1,0 +1,49 @@
+/* eslint-disable */
+// Exported functions/values
+let uscheme_filemap = new Map(),
+    uscheme_eval,
+    uscheme_reset;
+
+// These are global variables referenced by the compiled code.
+// Maybe these can be determined programatically.
+let CompilerInitial,
+    Con,
+    SMLtoJs,
+    SmlPrims,
+    basis$0Initial$1,
+    basis$0General$1,
+    basis$0List$1,
+    basis$0ListPair$1,
+    basis$0StringCvt$1,
+    basis$0StrBase$1,
+    basis$0Char$1,
+    basis$0String$1,
+    basis$0IntInfRep$1,
+    basis$0IO$1,
+    basis$0Substring$1,
+    basis$0Int32$1,
+    js$0JsCore$1,
+    js$0Js$1,
+    uscheme$0JsMap$1,
+    uscheme$0stubs$1,
+    uscheme$0mlscheme$1,
+    uscheme$0run$1
+// {{SCRIPT}}
+/* eslint-enable */
+
+export class UScheme {
+    name = 'uscheme';
+    mode = 'scheme';
+    autoCloseBrackets = '()[]{}';
+    extension = '.scm'
+    async setFilemap(filemap) {
+        uscheme_filemap = filemap;
+    }
+    async eval(str) {
+        return uscheme_eval(str);
+    }
+    async reset() {
+        uscheme_reset();
+    }
+};
+

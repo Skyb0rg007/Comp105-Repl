@@ -1,0 +1,14 @@
+
+# TODO
+
+site_name: Comp 105 Repls
+# Documentation input directory
+docs_dir: docs
+# Output directory
+site_dir: build-docs
+# How the site is styled
+theme: readthedocs
+# Navbar
+nav:
+- Home: index.md
+- About: about.md
