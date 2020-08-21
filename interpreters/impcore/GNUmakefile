@@ -28,6 +28,8 @@ clean:
 
 distclean: clean
 	$(RM) $(OUTPUT_JS) $(OUTPUT_WASM)
+	$(RM) -d _build/deps
+	$(RM) -d _build
 
 $(OUTPUT_JS): _build/impcore.js impcore.js.in
 	sed >$@ \
@@ -38,10 +40,10 @@ $(OUTPUT_WASM): _build/impcore.wasm
 	cp $< $@
 
 # https://www.gnu.org/software/make/manual/html_node/Multiple-Targets.html#Rules-with-Grouped-Targets
-_build/impcore.html _build/impcore.js _build/impcore.wasm &: $(OBJECTS)
+_build/impcore.html _build/impcore.js _build/impcore.wasm &: $(OBJECTS) | _build
 	$(EMCC) $(EMCC_LDFLAGS) $^ -o _build/impcore.html
 
-_build/%.o: src/%.c _build/deps/%.d
+_build/%.o: src/%.c _build/deps/%.d | _build _build/deps
 	$(EMCC) $(DEPFLAGS) $(EMCC_CFLAGS) -c $< -o $@
 
 impcore.patch: original src
@@ -50,6 +52,9 @@ impcore.patch: original src
 		|| if [ $$? -ne 1 ]; then return 1; fi
 
 $(DEPFILES): ; @:
+
+_build _build/deps:
+	mkdir -p $@
 
 -include $(DEPFILES)
 

@@ -25,8 +25,9 @@ clean:
 
 distclean: clean
 	$(RM) $(OUTPUT_JS)
+	$(RM) -d _build
 
-_build/index.html: $(SOURCES)
+_build/index.html: $(SOURCES) | _build
 	$(SMLTOJS) --output _build/index src/uscheme.mlb
 	$(RM) -r MLB
 
@@ -41,4 +42,7 @@ $(OUTPUT_JS): _build/optimized.js uscheme.js.in
 	sed >$@ \
 		-e '/{{SCRIPT}}/ {' -e 'r _build/optimized.js' -e 'd' -e '}' \
 		uscheme.js.in
+
+_build:
+	mkdir -p $@
 
