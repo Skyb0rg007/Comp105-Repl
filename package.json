@@ -2,7 +2,7 @@
   "name": "comp105-repl",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://skyb0rg007.github.io/uscheme-js",
+  "homepage": "https://skyb0rg007.github.io/Comp105-Repl",
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
