@@ -1,0 +1,35 @@
+;; forms of data
+;; Either a single digit d
+;; OR 10 * m + d where m not equal 0
+
+;; example inputs
+(val x1 4 )
+(val x2 9)
+(val x3 44)
+(val x4 907)
+(val x5 48)
+
+;; Pick the name now
+;; Write the contract now
+;; Write check assert cases now
+
+;; Algebraic Laws
+;; (all-fours? d) = (= d 4)
+;; (all-fours? (+ (* 10 m) d)) ==
+;;     (= d 4) && (all-fours? m)
+
+;; The code!
+  ;; return nonzero if and only if
+  ;; decimal rep of n can be written
+  ;; using only the digit 4
+(define all-fours? (n)
+  (if (< n 10)
+      (= n 4)
+      (and (= 4 (mod n 10))
+           (all-fours? (/ n 10)))))
+
+        (check-assert      (all-fours? 4))
+        (check-assert (not (all-fours? 9)))
+        (check-assert      (all-fours? 44))
+        (check-assert (not (all-fours? 48)))
+        (check-assert (not (all-fours? 907)))
