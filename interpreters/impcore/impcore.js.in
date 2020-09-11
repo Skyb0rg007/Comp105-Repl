@@ -13,8 +13,8 @@ const createModule = async () => {
         const Module = {
             output: () => output,
             clearOutput: () => output = '',
-            print: str => output += str,
-            printErr: str => output += str,
+            print: str => output += str + '\n',
+            printErr: str => output += str + '\n',
             onRuntimeInitialized: () => resolve(Module),
             locateFile: (path, scriptDirectory) => {
                 switch (path)
