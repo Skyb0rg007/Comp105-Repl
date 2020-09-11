@@ -1,3 +1,4 @@
+import { defineSchemeMode } from '../utils/defineSchemeMode';
 
 // TODO: code splitting via dynamic import
 const makeModule = Module => {
@@ -4739,13 +4740,13 @@ var dynCall_iiiii = Module["dynCall_iiiii"] = createExportWrapper("dynCall_iiiii
 var ___set_stack_limit = Module["___set_stack_limit"] = createExportWrapper("__set_stack_limit");
 
 /** @type {function(...*):?} */
-var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = createExportWrapper("dynCall_iidiiii");
 
 /** @type {function(...*):?} */
 var dynCall_iiii = Module["dynCall_iiii"] = createExportWrapper("dynCall_iiii");
 
 /** @type {function(...*):?} */
-var dynCall_iidiiii = Module["dynCall_iidiiii"] = createExportWrapper("dynCall_iidiiii");
+var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
 /** @type {function(...*):?} */
 var __growWasmMemory = Module["__growWasmMemory"] = createExportWrapper("__growWasmMemory");
@@ -5253,9 +5254,24 @@ const createModule = async () => {
     });
 };
 
+defineSchemeMode({
+    name: 'impcore',
+    keywords: [
+        'val', 'define', 'use',
+        'check-expect', 'check-assert', 'check-error',
+        'set', 'if', 'while', 'begin',
+        '&&', '||', '=',
+        'print', 'println', 'printu', '<', '>', '+', '-', '*', '/',
+        'and', 'or', 'not', '<=', '>=', '!=', 'mod', 'negated'
+    ],
+    indentKeywords: [
+        'val', 'define', 'set', 'if'
+    ]
+});
+
 export class Impcore {
     name = 'impcore';
-    mode = 'scheme';
+    mode = 'impcore';
     autoCloseBrackets = '()[]{}';
     extension = '.imp';
     #module;

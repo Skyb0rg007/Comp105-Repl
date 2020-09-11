@@ -1,5 +1,5 @@
 
-INTERPRETERS := impcore uscheme
+INTERPRETERS := impcore uscheme tuscheme usmalltalk
 
 .DEFAULT: all
 .PHONY: all clean distclean $(INTERPRETERS)

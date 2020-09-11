@@ -1,0 +1,3 @@
+#!/bin/sh
+$cc -O2 -o tst.js $* > /dev/null 2>/dev/null || exit 100
+node ./tst.js

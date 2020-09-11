@@ -1,4 +1,6 @@
 /* eslint-disable */
+import { defineSchemeMode } from '../utils/defineSchemeMode';
+
 // Exported functions/values
 let uscheme_filemap = new Map(),
     uscheme_eval,
@@ -467,9 +469,38 @@ a);return uscheme$0stubs$1.output$67(uscheme$0stubs$1.stdErr$66,"\n")},[b,uschem
 a},b));a=uscheme$0mlscheme$1.readEvalPrintWith$3532(function(a){return uscheme$0mlscheme$1.eprintln$376(a)},[b,a,[1,0]]);b=uscheme$0stubs$1.outputBuf$64[0];uscheme$0stubs$1.outputBuf$64[0]="";0;uscheme$0run$1.current_basis$64[0]=a;0;return b};uscheme_reset=function(b){return uscheme$0run$1.current_basis$64[0]=basis$0List$1.map$332(function(a){return[a[0],[a[1][0]]]},uscheme$0mlscheme$1.initialBasis$3726),0};return 0})();
 /* eslint-enable */
 
+defineSchemeMode({
+    name: 'uscheme',
+    keywords: [
+        'val', 'define', 'use',
+        'check-expect', 'check-assert', 'check-error',
+        'set', 'if', 'while', 'begin',
+        '&&', '||',
+        'let', 'letrec', 'let*', 'quote', 'cond',
+
+        '+', '-', '*', '/', '<', '>', '=', 'null?', 'boolean?', 'number?',
+        'symbol?', 'pair?', 'function?', 'cons', 'car', 'cdr', 'println',
+        'print', 'printu', 'hash', 'error',
+        'caar', 'cadr', 'cdar', 'cddr', 'caaar',
+        'caadr', 'cadar', 'caddr', 'cdaar', 'cdadr', 'cddar', 'cdddr',
+        'caaaar', 'caaadr', 'caadar', 'caaddr', 'cadaar', 'cadadr', 'caddar', 'cadddr', 'cdaaar', 'cdaadr', 'cdadar', 'cdaddr', 'cddaar', 'cddadr', 'cdddar', 'cddddr',
+        'list1', 'list2', 'list3',
+        'append', 'revapp', 'reverse', 'and', 'or', 'not',
+        'atom?', 'equal?', 'make-alist-pair', 'alist-pair-key', 'alist-pair-attribute',
+        'bind', 'find', 'curry', 'uncurry', 'o',
+        'filter', 'map', 'app', 'exists?', 'all?', 'foldr', 'foldl', 'newline',
+        'space', 'semicolon', 'quotemark', '<=', '>=', '!=', 'max', 'min',
+        'negated', 'mod', 'gcd', 'lcm', 'list4', 'list5', 'list6', 'list7', 'list8'
+    ],
+    indentKeywords: [
+        'val', 'define', 'set', 'if',
+        'let', 'letrec', 'let*', 'cond'
+    ]
+});
+
 export class UScheme {
     name = 'uscheme';
-    mode = 'scheme';
+    mode = 'uscheme';
     autoCloseBrackets = '()[]{}';
     extension = '.scm'
     async setFilemap(filemap) {

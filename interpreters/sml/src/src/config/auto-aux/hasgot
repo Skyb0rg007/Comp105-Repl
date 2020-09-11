@@ -1,0 +1,9 @@
+#!/bin/sh
+(echo "int main() {"
+ for f in $*; do
+     echo "extern void $f();";
+     echo "  $f();";
+ done
+ echo "}") > hasgot.c
+exec emcc -o tst.js hasgot.c > /dev/null 2>/dev/null
+

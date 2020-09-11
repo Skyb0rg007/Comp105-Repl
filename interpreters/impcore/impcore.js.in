@@ -1,3 +1,4 @@
+import { defineSchemeMode } from '../utils/defineSchemeMode';
 
 // TODO: code splitting via dynamic import
 const makeModule = Module => {
@@ -39,9 +40,24 @@ const createModule = async () => {
     });
 };
 
+defineSchemeMode({
+    name: 'impcore',
+    keywords: [
+        'val', 'define', 'use',
+        'check-expect', 'check-assert', 'check-error',
+        'set', 'if', 'while', 'begin',
+        '&&', '||', '=',
+        'print', 'println', 'printu', '<', '>', '+', '-', '*', '/',
+        'and', 'or', 'not', '<=', '>=', '!=', 'mod', 'negated'
+    ],
+    indentKeywords: [
+        'val', 'define', 'set', 'if'
+    ]
+});
+
 export class Impcore {
     name = 'impcore';
-    mode = 'scheme';
+    mode = 'impcore';
     autoCloseBrackets = '()[]{}';
     extension = '.imp';
     #module;

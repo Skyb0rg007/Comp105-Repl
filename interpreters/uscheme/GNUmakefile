@@ -4,14 +4,13 @@ CLOSURE_COMPILER := google-closure-compiler
 
 OUTPUT_JS := ../../src/interpreters/uscheme.js
 
-SOURCES := $(addprefix src/, \
-	JS_MAP.sig               \
-	JsMap.sml                \
-	stubs.sml                \
-	run.sml                  \
-	mlscheme.sml             \
-	uscheme.mlb              \
-	)
+SOURCES :=           \
+	src/JS_MAP.sig   \
+	src/JsMap.sml    \
+	src/stubs.sml    \
+	src/run.sml      \
+	src/mlscheme.sml \
+	src/uscheme.mlb
 
 .DEFAULT: all
 .PHONY: clean distclean

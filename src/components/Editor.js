@@ -7,6 +7,7 @@ import 'codemirror/theme/gruvbox-dark.css';
 import 'codemirror/addon/edit/matchbrackets';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/comment/comment';
+import './Editor.css';
 // import './uscheme-mode';
 // import 'codemirror/mode/scheme/scheme';
 
@@ -20,7 +21,7 @@ export const Editor = ({ onCtrlEnter, value, onEdit }) => {
     // Edit for more keybindings
     const keyMap = {
       'Ctrl-/': cm => cm.toggleComment(),
-      'Ctrl-Enter': cm => onCtrlEnter(cm)
+      'Ctrl-Enter': _cm => onCtrlEnter()
     };
     if (instance)
       instance.addKeyMap(keyMap);
@@ -41,6 +42,7 @@ export const Editor = ({ onCtrlEnter, value, onEdit }) => {
       onBeforeChange={(_editor, _data, value) => onEdit(value)}
       options={options}
       editorDidMount={editor => setInstance(editor)}
+      className='editor'
     />
   );
 };

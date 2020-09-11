@@ -1,0 +1,47 @@
+
+.message {
+    line-height: 21px;
+}
+
+.container {
+  min-height: 300px;
+  max-width: 100%; // Fill parent before overflowing
+  max-height: 100%; // Fill parent before overflowing
+  border-radius: 5px;
+  overflow: auto;
+  cursor: text;
+  background-color: #212121;
+  background-size: cover;
+}
+
+.content {
+    padding: 20px;
+    height: 100%;
+    font-size: 15px;
+    color: #FFFFFF;
+    font-family: monospace;
+}
+
+.inputArea {
+    display: inline-flex;
+    width: 100%;
+}
+
+.promptLabel {
+    padding-top: 3px;
+    color: #EE9C34;
+}
+
+.input {
+    border: 0;
+    padding: 0 0 0 7px;
+    margin: 0;
+    flex-grow: 100;
+    width: 100%;
+    height: 22px;
+    background: transparent;
+    font-size: 15px;
+    color: #F0BF81;
+    font-family: monospace;
+    outline: none;
+}

@@ -10,7 +10,6 @@ OUTPUT_JS := ../../src/interpreters/impcore.js
 OUTPUT_WASM := ../../public/impcore.wasm
 
 SOURCES := $(wildcard src/*.c)
-HEADERS := $(wildcard src/*.h)
 OBJECTS := $(patsubst src/%.c, _build/%.o, $(SOURCES))
 DEPFILES := $(patsubst src/%.c, _build/deps/%.d, $(SOURCES))
 
