@@ -1,37 +1,37 @@
 ;; Recall member?
-    (define member? (m ms)                                                          
-      (if (null? ms)                                                                
-          #f                                                                        
-          (if (= m (car ms))                                                        
-              #t                                                                    
+    (define member? (m ms)
+      (if (null? ms)
+          #f
+          (if (= m (car ms))
+              #t
               (member? m (cdr ms)))))
-                                                                  
-  ;; forms of data                                                                
-  ;; '()                                                                          
-  ;; (cons n ns) where n is a number and                                          
-  ;;             ns is a list of numbers                                          
-                                                                                  
-  ;; example inputs                                                               
-  (val x5 '(6 10))                                                                
-  (val x6 '(3 6 12 7 8 9 10))                                                     
-                                                                                  
-  ;; Write check assert cases now                                                 
-                                                                                  
-  ;; Algebraic Laws                                                               
-  ;; (sum-16? '()) = #f                                                           
-  ;; (sum-16? (cons n ns)) =                                                      
-  ;;      (sum-16? ns)  OR                                                        
-  ;;      n and an element in ns sum to 16                                        
-  ;;      i.e., (member?  (- 16 n) ns))                                           
-                                                                                  
-                                                                                  
-  ;; The code!                                                                    
-    ;; returns #t if and only if ms contains                                      
-    ;; two distinct elements that sum to 16,                                      
-    ;; where ms is a list of numbers                                              
-                                                                                 
-  (define sum-16? (ms)                                                            
-    (if (null? ms)                                                                
-        #f                                                                        
-        (|| (sum-16? (cdr ms))                                                    
-            (member? (- 16 (car ms)) (cdr ms)))))                                  
+
+  ;; forms of data
+  ;; '()
+  ;; (cons n ns) where n is a number and
+  ;;             ns is a list of numbers
+
+  ;; example inputs
+  (val x5 '(6 10))
+  (val x6 '(3 6 12 7 8 9 10))
+
+  ;; Write check assert cases now
+
+  ;; Algebraic Laws
+  ;; (sum-16? '()) = #f
+  ;; (sum-16? (cons n ns)) =
+  ;;      (sum-16? ns)  OR
+  ;;      n and an element in ns sum to 16
+  ;;      i.e., (member?  (- 16 n) ns))
+
+
+  ;; The code!
+    ;; returns #t if and only if ms contains
+    ;; two distinct elements that sum to 16,
+    ;; where ms is a list of numbers
+
+  (define sum-16? (ms)
+    (if (null? ms)
+        #f
+        (|| (sum-16? (cdr ms))
+            (member? (- 16 (car ms)) (cdr ms)))))
