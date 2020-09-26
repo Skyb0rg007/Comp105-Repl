@@ -1,0 +1,24 @@
+(define witness-cps (p? xs succ fail)
+  (if (null? xs)
+      (fail)
+      (let ([z (car xs)])
+        (if (p? z)
+            (succ z)
+            (witness-cps p? (cdr xs) succ fail)))))
+
+
+(val 2020f '((Fisher 105)(Monroe 40)(Chow 116)))
+
+
+(define instructor-info (instructor classes)
+  (let (
+         [s  (lambda (info)    ; success continuation
+                (list3 instructor 'teaches (cadr info)))]
+         [f  (lambda ()        ; failure continuation
+                (list2 instructor 'is-not-on-the-list))])
+        (witness-cps (o ((curry =) instructor) car)
+                      classes s f)))
+
+(instructor-info 'Fisher 2020f)
+(instructor-info 'Chow 2020f)
+(instructor-info 'Votipka 2020f)
