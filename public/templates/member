@@ -1,6 +1,6 @@
-(define member? (m ms)                                                          
-  (if (null? ms)                                                                
-        #f                                                                        
-        (if (= m (car ms))                                                        
-              #t                                                                    
-              (member? m (cdr ms)))))  
+(define member? (m ms)
+  (if (null? ms)
+        #f
+        (if (= m (car ms))
+              #t
+              (member? m (cdr ms)))))

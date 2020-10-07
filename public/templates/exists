@@ -1,0 +1,6 @@
+(define exists? (p? xs)
+  (if (null? xs)
+    #f
+    (if (p? (car xs))
+      #t
+      (exists? p? (cdr xs)))))
