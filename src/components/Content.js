@@ -17,7 +17,8 @@ export const Content = React.forwardRef((_props, ref) => {
   React.useEffect(() => {
     if (queryTemplate) {
       fetch(`${process.env.PUBLIC_URL}/templates/${queryTemplate}`)
-        .then(response => response.text())
+        .then(response => 
+            response.ok ?  response.text() : `;; Error reading data from template "${queryTemplate}"`)
         .then(data => setEditorValue(data));
     }
   }, [queryTemplate]);
