@@ -26,7 +26,9 @@ export class Sml {
             if (ret.evaluationErrored) {
                 return `! Uncaught exception:\n! ${ret.error.toString()}`;
             } else {
-                return this.#state.toString();
+                const printed = this.#state.warns.map(w => w.name === 'Warning' ? w.message : '')
+                printed.push(this.#state.toString());
+                return printed.join('\n');
             }
         } catch (e) {
             if (e.name === 'Input Incomplete') {
