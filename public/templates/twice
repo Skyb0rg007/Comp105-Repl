@@ -1,0 +1,14 @@
+;; blocks
+(val twice [block (n) (n + n)])
+(twice value: 3)
+;; note lightweight syntax for paramaterless blocks
+(val delayed {('hello println) 42})
+delayed
+(delayed value)
+;; blocks sent to Booleans
+(val x 10)
+(val y 20)
+;; Note the number of colons matches
+;; number of args
+((x <= y) ifTrue:ifFalse: {x} {y})
+
