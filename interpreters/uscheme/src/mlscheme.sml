@@ -1390,17 +1390,71 @@ val _ = op bindings  : (name * exp) list parser
                                                                                )
      , ("(quote sexp)",             LITERAL             <$> sexp)
 
-   (* rows added to ML \uscheme's [[exptable]] in exercises ((prototype)) 329 *)
-     , ("(cond ([q a] ...))",
-        let fun desugarCond qas = raise LeftAsExercise "desugar cond"
+(* rows added to ML \uscheme's [[exptable]] in exercises ((answers)) (BUG: software can't tell where this code came from [NW20H4Hd-2VlfAU-1]) *)
+     , ("(cond (question-exp answer-exp) ...)",
+        let fun addQa ((question, answer), rest) = IFX (question, answer, rest)
             val qa = bracket ("[question answer]", pair <$> exp <*> exp)
-     (* type declarations for consistency checking *)
-     val _ = op desugarCond : (exp * exp) list -> exp
+            val condError =
+              APPLY (VAR "error", [LITERAL (SYM
+                                      "cond:-all-question-results-were-false")])
+            fun desugarCond [] = condError
+              | desugarCond ((q, a) :: qas) = IFX (q, a, desugarCond qas)
         in  desugarCond <$> many qa
         end
        )
      (* rows added to ML \uscheme's [[exptable]] in exercises S376c *)
      (* add syntactic sugar here, each row preceded by a comma *)
+
+(* rows added to ML \uscheme's [[exptable]] in exercises ((answers)) (BUG: software can't tell where this code came from [NW1eSVof-2VlfAU-1]) *)
+     , ("(&& e1 ... en)",
+         let fun andSugar [] = LITERAL (BOOLV true)
+               | andSugar [e] = e
+               | andSugar (e::es) = IFX (e, andSugar es, LITERAL (BOOLV false))
+         in  andSugar <$> many exp
+         end
+       )
+
+(* rows added to ML \uscheme's [[exptable]] in exercises ((answers)) (BUG: software can't tell where this code came from [NW1eSVof-2VlfAU-2]) *)
+     , ("(|| e1 ... en)",
+         let fun freeIn exp y =
+               let fun member y [] = false
+                     | member y (z::zs) = y = z orelse member y zs
+                   fun has_y (LITERAL _) = false
+                     | has_y (VAR x) = x = y
+                     | has_y (SET (x, e)) = x = y orelse has_y e
+                     | has_y (IFX (e1, e2, e3))  = List.exists has_y [e1, e2, e3
+                                                                               ]
+                     | has_y (WHILEX (e1, e2))   = List.exists has_y [e1, e2]
+                     | has_y (BEGIN es)          = List.exists has_y es
+                     | has_y (APPLY (e, es))     = List.exists has_y (e::es)
+                     | has_y (LETX (LET, bs, e)) = List.exists rhs_has_y bs
+                                                                          orelse
+                                                   (not (member y (map fst bs))
+                                                   andalso has_y e)
+                     | has_y (LETX (LETSTAR, [], e)) = has_y e
+                     | has_y (LETX (LETSTAR, b::bs, e)) =
+                         has_y (LETX (LET, [b], LETX(LETSTAR, bs, e)))
+                     | has_y (LETX (LETREC, bs, e)) =
+                         not (member y (map fst bs)) andalso has_y e
+                     | has_y (LAMBDA (xs, e)) = not (member y xs) andalso has_y
+                                                                               e
+                   and rhs_has_y (_, e) = has_y e
+               in  has_y exp
+               end
+
+             fun orSugar [] = LITERAL (BOOLV false)
+               | orSugar [e] = e
+               | orSugar (e1::es) =
+                   let val e2 = orSugar es
+                       val x_n's = streamMap (fn n => "x" ^ intString n)
+                                                                        naturals
+                       val xs = streamFilter (not o freeIn e2) x_n's
+                       val (x, _)  = valOf (streamGet xs)
+                   in  LETX (LET, [(x, e1)], IFX (VAR x, VAR x, e2))
+                   end
+         in  orSugar <$> many exp
+         end
+       )
      ]
   end
 (* parsers and [[xdef]] streams for \uscheme S376e *)
@@ -1427,7 +1481,85 @@ val _ = op testtable : unit_test parser
 val xdeftable = usageParsers
   [ ("(use filename)", USE <$> name)
   (* rows added to \uscheme\ [[xdeftable]] in exercises S377d *)
-  (* add syntactic sugar here, each row preceded by a comma *) 
+  (* add syntactic sugar here, each row preceded by a comma *)
+
+(* rows added to \uscheme\ [[xdeftable]] in exercises ((answers)) (BUG: software can't tell where this code came from [NW1eSVof-2tXsMm-1]) *)
+  , ( "(record record-name (field-name ...))"
+    , let fun arityError n args =
+            raise RuntimeError ("primitive function expected " ^ intString n ^
+                                " arguments; got " ^ intString (length args))
+          fun noExp f (e, vs) = f vs  (* inExp & friends not in scope here *)
+          fun binaryOp f = noExp (fn [a, b] => f (a, b) | args => arityError 2
+                                                                           args)
+          fun unaryOp  f = noExp (fn [a]    => f a      | args => arityError 1
+                                                                           args)
+
+          fun uprim f e        = APPLY (LITERAL (PRIMITIVE (unaryOp f)), [e])
+          fun bprim f (e1, e2) = APPLY (LITERAL (PRIMITIVE (binaryOp f)), [e1,
+                                                                            e2])
+
+          val car = uprim (fn PAIR (x, xs) => x  | _ => raise RuntimeError
+                                                                     "non-pair")
+          val cdr = uprim (fn PAIR (x, xs) => xs | _ => raise RuntimeError
+                                                                     "non-pair")
+          val nullp = uprim (BOOLV o (fn NIL    => true | _ => false))
+          val pairp = uprim (BOOLV o (fn PAIR _ => true | _ => false))
+          val cons = bprim PAIR
+
+          fun desugarRecord recname fieldnames =
+                recordConstructor recname fieldnames ::
+                recordPredicate recname fieldnames ::
+                recordAccessors recname 0 fieldnames
+          and recordConstructor recname fieldnames = 
+                let val con = "make-" ^ recname
+                    val formals = map (fn s => "the-" ^ s) fieldnames
+                    val body = cons (LITERAL (SYM con), varlist formals)
+                in  DEFINE (con, (formals, body))
+                end
+          and recordPredicate recname fieldnames =
+                let val tag = SYM ("make-" ^ recname)
+                    val predname = recname ^ "?"
+                    val r = VAR "r" : exp
+                    val formals = ["r"]
+                    val good_car = APPLY (VAR "=", [car r, LITERAL tag])
+                    fun good_cdr looking_at [] = nullp looking_at
+                      | good_cdr looking_at (_ :: rest) =
+                          and_also (pairp looking_at, good_cdr (cdr looking_at)
+                                                                           rest)
+                    val body =
+                      and_also (pairp r, and_also (good_car, good_cdr (cdr r)
+                                                                    fieldnames))
+                in  DEFINE (predname, (formals, body))
+                end
+          and recordAccessors recname n [] = []
+            | recordAccessors recname n (field::fields) =
+                let val predname = recname ^ "?"
+                    val accname = recname ^ "-" ^ field
+                    val formals = ["r"]
+                    val thefield = car (cdrs (n+1, VAR "r"))
+                    val body = IFX ( APPLY (VAR predname, [VAR "r"])
+                                   , thefield
+                                   , error (list [ SYM "value-passed-to"
+                                                 , SYM accname
+                                                 , SYM "is-not-a"
+                                                 , SYM recname
+                                                 ]))
+                in  DEFINE (accname, (formals, body)) ::
+                    recordAccessors recname (n+1) fields
+                end
+          and and_also (p, q) = IFX (p, q, LITERAL (BOOLV false)) : exp
+          and cdrs (0, xs) = xs
+            | cdrs (n, xs) = cdr (cdrs (n-1, xs))
+
+          and list [] = LITERAL NIL
+            | list (v::vs) = cons (LITERAL v, list vs)
+          and error x = APPLY (VAR "error", [x])
+
+          and varlist [] = LITERAL NIL
+            | varlist (x::xs) = cons (VAR x, varlist xs)
+      in  DEFS <$> (desugarRecord <$> name <*> recordFieldsOf name)
+      end
+    ) 
   ]
 (* type declarations for consistency checking *)
 val _ = op xdeftable : xdef parser
@@ -1820,6 +1952,15 @@ fun intcompare f = comparison (fn (NUM n1, NUM n2) => f (n1, n2)
 val _ = op predOp     : (value         -> bool) -> (value list -> value)
 val _ = op comparison : (value * value -> bool) -> (value list -> value)
 val _ = op intcompare : (int   * int   -> bool) -> (value list -> value)
+(* utility functions for building primitives in \uscheme ((answers)) (BUG: software can't tell where this code came from [NW1eSVof-ZN75f-1]) *)
+fun pcall f =
+  let val application = APPLY (LITERAL f, [])
+      fun good result = embedList [BOOLV true, result]
+      fun bad message =
+        embedList [BOOLV false, embedList (map (NUM o Char.ord) (explode message
+                                                                             ))]
+  in  withHandlers (good o eval) (application, emptyEnv) (bad o stripAtLoc)
+  end
 (* utility functions for building primitives in \uscheme S367f *)
 fun errorPrimitive (_, [v]) = raise RuntimeError (valueString v)
   | errorPrimitive (e, vs)  = inExp (arityError 1) (e, vs)
@@ -1866,6 +2007,19 @@ val initialBasis =
                                             | v => raise RuntimeError
                                                            (
                                 "cdr applied to non-list " ^ valueString v))) ::
+
+(* primitives for \uscheme\ [[::]] ((answers)) (BUG: software can't tell where this code came from [NW1eSVof-4FXIp2-1]) *)
+                        ("pcall", unaryOp pcall) ::
+                        ("pcall-with-fuel", binaryOp (fn (f, NUM n) => withFuel
+                                                                       n pcall f
+                                                       | _ => raise RuntimeError
+                                                     "fuel is not a number")) ::
+                        ("cpu-fuel", (fn [NUM n] => (defaultEvalFuel := n;
+                                              resetOverflowCheck (); BOOLV true)
+                                       | []      => NUM (!defaultEvalFuel)
+                                       | _       => raise RuntimeError
+                                           "cpu-fuel applied to non-number")) ::
+                        ("fuel-remaining", fn _ => NUM (fuelRemaining ())) ::
                         (* primitives for \uscheme\ [[::]] S367d *)
                         ("println", unaryOp (fn v => (print (valueString v ^
                                                                   "\n"); v))) ::
@@ -2023,6 +2177,20 @@ val initialBasis =
                      , "  (if (null? xs)"
                      , "    zero"
                      , "    (foldl combine (combine (car xs) zero) (cdr xs))))"
+                     ,
+";  predefined uScheme functions (BUG: software can't tell where this code came from [NWVwRpg-1VrCoa-I]) "
+                     , "(define takewhile (p? xs)"
+                     , "  (if (null? xs)"
+                     , "     '()"
+                     , "     (if (p? (car xs))"
+                     , "         (cons (car xs) (takewhile p? (cdr xs)))"
+                     , "         '())))"
+                     , "(define dropwhile (p? xs)"
+                     , "  (if (null? xs)"
+                     , "     '()"
+                     , "     (if (p? (car xs))"
+                     , "         (dropwhile p? (cdr xs))"
+                     , "         xs)))"
                      , ";  predefined uScheme functions S310e "
                      , "(val newline      10)   (val left-round    40)"
                      , "(val space        32)   (val right-round   41)"
@@ -2043,6 +2211,12 @@ val initialBasis =
                      , "(define gcd (m n) (if (= n 0) m (gcd n (mod m n))))"
                      , "(define lcm (m n) (if (= m 0) 0 (* m (/ n (gcd m n)))))"
                      , ";  predefined uScheme functions S311f "
+                     , "(define min* (ns) (foldr min (car ns) (cdr ns)))"
+                     , "(define max* (ns) (foldr max (car ns) (cdr ns)))"
+                     , "(define gcd* (ns) (foldr gcd 0 ns))"
+                     , "(define lcm* (ns) (foldr lcm 1 ns))"
+                     ,
+";  predefined uScheme functions (BUG: software can't tell where this code came from [NW2Nhgep-1VrCoa-6]) "
                      , "(define list4 (x y z a)         (cons x (list3 y z a)))"
                      ,
                      "(define list5 (x y z a b)       (cons x (list4 y z a b)))"
