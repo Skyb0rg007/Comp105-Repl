@@ -13,7 +13,7 @@ export const Content = React.forwardRef((_props, ref) => {
   const replRef = React.useRef(null);
   const queryParams = useQueryParams();
   let queryTemplate = queryParams.get('template');
-  const [editorValue, setEditorValue] = React.useState(';; Initial content');
+  const [editorValue, setEditorValue] = React.useState('');
   React.useEffect(() => {
     if (queryTemplate) {
       fetch(`${process.env.PUBLIC_URL}/templates/${queryTemplate}`)
